@@ -71,6 +71,8 @@ module.exports = (client) ->
       mimeTypeFor(handlers.currentPath())
       .then (type) ->
         new Blob [session.getValue()], type: type
+    resize: ->
+      aceEditor.resize()
 
   menuBar = MenuBar
     items: parseMenu """
