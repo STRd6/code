@@ -53,7 +53,8 @@ module.exports = (client) ->
     .then (content) ->
       if path
         handlers.currentPath path
-        setModeFor(path)
+
+      setModeFor(path or file.name)
 
       session.setValue(content)
       handlers.saved true
