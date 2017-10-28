@@ -1,0 +1,35 @@
+body
+  display: flex
+
+editor
+  display: flex
+  flex-direction: column
+  flex: 1
+
+  > section
+    flex: 1
+
+container.about
+  padding: 0 1em
+
+.ace_search_form
+  font-family: Arial, sans serif
+  font-size: 13.3333px
+
+#modal
+  > input[type=file]
+    padding: 2em
+
+@media print
+  menu.bar, menu
+    display: none
+
+  body
+    display: initial
+
+  editor
+    display: initial
+    > textarea
+      display: none
+    > pre
+      display: block
