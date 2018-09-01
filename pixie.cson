@@ -2,8 +2,7 @@ version: "0.1.0"
 dependencies:
   sys: "STRd6/system-client:v0.1.5"
 remoteDependencies: [
-  "https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ace.js"
-  "https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ext-language_tools.js"
+  "https://unpkg.com/monaco-editor@0.8.3/min/vs/loader.js"
 ]
 publish:
   s3:

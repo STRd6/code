@@ -2,36 +2,49 @@ module.exports = (client) ->
   {application, system, UI, util} = client
   {FileIO} = util
 
-  ace.require("ace/ext/language_tools")
-
   {MenuBar, Modal, Observable, Progress, Table, Util:{parseMenu}, Window} = UI
 
-  # system.Achievement.unlock "Notepad.exe"
+  proxy = URL.createObjectURL(new Blob(["""
+    self.MonacoEnvironment = {
+      baseUrl: 'https://unpkg.com/monaco-editor@0.8.3/min/'
+    };
+    importScripts('https://unpkg.com/monaco-editor@0.8.3/min/vs/base/worker/workerMain.js');
+  """], { type: 'text/javascript' }));
 
-  element = document.createElement "editor"
-  aceElement = document.createElement "section"
-  element.appendChild aceElement
+  window.require.config
+    paths:
+      vs: 'https://unpkg.com/monaco-editor@0.8.3/min/vs'
+  window.MonacoEnvironment =
+    getWorkerUrl: -> proxy
 
-  aceEditor = ace.edit aceElement
-  aceEditor.$blockScrolling = Infinity
-  aceEditor.setOptions
-    fontSize: "16px"
-    enableBasicAutocompletion: true
-    enableLiveAutocompletion: true
-    highlightActiveLine: true
+  element = document.createElement 'editor'
+  monacoElement = document.createElement "section"
+  element.appendChild monacoElement
+  
+  monacoEditor = null
 
-  session = aceEditor.getSession()
-  session.setUseSoftTabs true
-  session.setTabSize 2
+  window.require ["vs/editor/editor.main"], ->
+    monacoEditor = monaco.editor.create monacoElement,
+      value: """
+      	function x() {
+      	  console.log("Hello world!");
+      	}
+      	
+      	x();
+      """
+      fontLigatures: true
+      fontSize: 16
+      language: 'javascript'
+      theme: 'vs-light'
 
-  mode = "coffee"
-  session.setMode("ace/mode/#{mode}")
+    monacoEditor.addListener 'didType', ->
+      console.log monacoEditor.getValue()
 
-  global.aceEditor = aceEditor
+    window.monacoEditor = monacoEditor
 
   modes =
     cson: "coffee"
-    jadelet: "jade"
+    jadelet: "pug"
     js: "javascript"
     md: "markdown"
     styl: "stylus"
@@ -59,8 +72,8 @@ module.exports = (client) ->
       session.setValue(content)
       handlers.saved true
 
-  session.on "change", ->
-    handlers.saved false
+  # session.on "change", ->
+  #   handlers.saved false
 
   handlers = FileIO
     loadFile: initSession
@@ -100,7 +113,7 @@ module.exports = (client) ->
     if path
       path = " - #{path}"
 
-    "Ace#{path}#{savedIndicator}"
+    "Monaco#{path}#{savedIndicator}"
 
   title.observe application.title
 
