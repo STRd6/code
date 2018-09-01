@@ -21,8 +21,11 @@ module.exports = (client) ->
   element = document.createElement 'editor'
   monacoElement = document.createElement "section"
   element.appendChild monacoElement
-  
+
   monacoEditor = null
+
+  afterLoaded = new Promise (resolve) ->
+    window.require ["vs/editor/editor.main"], -> resolve()
 
   # Configuration options:
   #   https://microsoft.github.io/monaco-editor/api/interfaces/monaco.editor.ieditoroptions.html
@@ -63,10 +66,12 @@ module.exports = (client) ->
   setModeFor = (path) ->
     extension = extensionFor(path)
 
-    monaco.editor.setModelLanguage(monacoEditor.getModel(), modes[extension] or extension)
+    afterLoaded.then ->
+      monaco.editor.setModelLanguage(monacoEditor.getModel(), modes[extension] or extension)
 
   initSession = (file, path) ->
-    file.readAsText()
+    afterLoaded.then ->
+      file.readAsText()
     .then (content) ->
       if path
         handlers.currentPath path
