@@ -14,6 +14,7 @@ module.exports = (client) ->
   window.require.config
     paths:
       vs: 'https://unpkg.com/monaco-editor@0.8.3/min/vs'
+
   window.MonacoEnvironment =
     getWorkerUrl: -> proxy
 
@@ -22,6 +23,9 @@ module.exports = (client) ->
   element.appendChild monacoElement
   
   monacoEditor = null
+
+  # Configuration options:
+  #   https://microsoft.github.io/monaco-editor/api/interfaces/monaco.editor.ieditoroptions.html
 
   window.require ["vs/editor/editor.main"], ->
     monacoEditor = monaco.editor.create monacoElement,
@@ -38,12 +42,13 @@ module.exports = (client) ->
       theme: 'vs-light'
 
     monacoEditor.addListener 'didType', ->
-      console.log monacoEditor.getValue()
+      handlers.saved false
 
     window.monacoEditor = monacoEditor
 
   modes =
-    cson: "coffee"
+    coffee: "coffeescript"
+    cson: "coffeescript"
     jadelet: "pug"
     js: "javascript"
     md: "markdown"
@@ -57,9 +62,8 @@ module.exports = (client) ->
 
   setModeFor = (path) ->
     extension = extensionFor(path)
-    mode = modes[extension] or extension
 
-    session.setMode("ace/mode/#{mode}")
+    monaco.editor.setModelLanguage(monacoEditor.getModel(), modes[extension] or extension)
 
   initSession = (file, path) ->
     file.readAsText()
@@ -69,23 +73,19 @@ module.exports = (client) ->
 
       setModeFor(path or file.name)
 
-      session.setValue(content)
+      monacoEditor.setValue(content)
       handlers.saved true
-
-  # session.on "change", ->
-  #   handlers.saved false
 
   handlers = FileIO
     loadFile: initSession
     newFile: ->
-      session.setValue ""
-      session.setMode("ace/mode/coffee")
+      monacoEditor.setValue ""
     saveData: ->
       mimeTypeFor(handlers.currentPath())
       .then (type) ->
-        new Blob [session.getValue()], type: type
+        new Blob [monacoEditor.getValue()], type: type
     resize: ->
-      aceEditor.resize()
+      monacoEditor.layout()
 
   menuBar = MenuBar
     items: parseMenu """
