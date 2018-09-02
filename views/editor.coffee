@@ -32,13 +32,6 @@ module.exports = (client) ->
 
   window.require ["vs/editor/editor.main"], ->
     monacoEditor = monaco.editor.create monacoElement,
-      value: """
-      	function x() {
-      	  console.log("Hello world!");
-      	}
-      	
-      	x();
-      """
       fontLigatures: true
       fontSize: 16
       language: 'javascript'
