@@ -55,13 +55,13 @@ system.ready()
   editor.save = ->
     Modal.prompt "File name", "newfile.txt"
     .then (name) ->
-      blob = editor.saveData()
-
-      url = window.URL.createObjectURL(blob)
-      a = document.createElement("a")
-      a.href = url
-      a.download = name
-      a.click()
-      window.URL.revokeObjectURL(url)
+      editor.saveData()
+      .then (blob) ->
+        url = window.URL.createObjectURL(blob)
+        a = document.createElement("a")
+        a.href = url
+        a.download = name
+        a.click()
+        window.URL.revokeObjectURL(url)
 
   console.warn e

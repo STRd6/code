@@ -84,10 +84,11 @@ module.exports = (client) ->
     loadFile: initSession
     newFile: ->
       monacoEditor.setValue ""
+    # Must return a promise for a blob
     saveData: ->
       type = mimeTypeFor(handlers.currentPath())
-      
-      new Blob [monacoEditor.getValue()], type: type
+
+      Promise.resolve new Blob [monacoEditor.getValue()], type: type
     resize: ->
       monacoEditor.layout()
 
