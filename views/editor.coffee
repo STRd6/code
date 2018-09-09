@@ -85,9 +85,9 @@ module.exports = (client) ->
     newFile: ->
       monacoEditor.setValue ""
     saveData: ->
-      mimeTypeFor(handlers.currentPath())
-      .then (type) ->
-        new Blob [monacoEditor.getValue()], type: type
+      type = mimeTypeFor(handlers.currentPath())
+      
+      new Blob [monacoEditor.getValue()], type: type
     resize: ->
       monacoEditor.layout()
 
