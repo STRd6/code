@@ -111,8 +111,10 @@ module.exports = (client) ->
     path = handlers.currentPath()
     if handlers.saved()
       savedIndicator = ""
+      application.saved true
     else
       savedIndicator = "*"
+      application.saved false
 
     if path
       path = " - #{path}"
