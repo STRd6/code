@@ -74,9 +74,9 @@ module.exports = (client) ->
       session.setValue ""
       session.setMode("ace/mode/coffee")
     saveData: ->
-      mimeTypeFor(extensionFor(handlers.currentPath()))
-      .then (type) ->
-        new Blob [session.getValue()], type: type
+      type = mimeTypeFor(extensionFor(handlers.currentPath()))
+
+      new Blob [session.getValue()], type: type
     resize: ->
       aceEditor.resize()
 
