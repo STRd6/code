@@ -51,10 +51,16 @@ module.exports = (client) ->
     styl: "stylus"
     txt: "text"
 
-  mimeTypeFor = (path) ->
-    system.mimeTypeFor(path)
-    .then (type) ->
-      "#{type}; charset=utf-8"
+  mimes =
+    html: "text/html"
+    js: "application/javascript"
+    json: "application/json"
+    md: "text/markdown"
+
+  mimeTypeFor = (extension) ->
+    type = mimes[extension] or "text/plain"
+
+    "#{type}; charset=utf-8"
 
   setModeFor = (path) ->
     extension = extensionFor(path)
