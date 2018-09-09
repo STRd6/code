@@ -73,10 +73,12 @@ module.exports = (client) ->
     newFile: ->
       session.setValue ""
       session.setMode("ace/mode/coffee")
+
+    # Must return a promise for a blob
     saveData: ->
       type = mimeTypeFor(extensionFor(handlers.currentPath()))
 
-      new Blob [session.getValue()], type: type
+      Promise.resolve new Blob [session.getValue()], type: type
     resize: ->
       aceEditor.resize()
 
