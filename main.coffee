@@ -3,7 +3,7 @@ Editor = require "./views/editor"
 SystemClient = require "sys"
 SystemClient.applyExtensions()
 {system, application, postmaster, util, Drop, UI} = client = SystemClient
-  applyStylesheet: true
+  applyStyle: true
 {Modal} = UI
 
 # Add our style after system client UI styles so we can override
