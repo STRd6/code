@@ -12,7 +12,7 @@ document.head.appendChild style
 
 editor = Editor(client)
 document.body.appendChild editor.element
-postmaster.delegate = editor
+application.delegate = editor
 
 Drop document, (e) ->
   return if e.defaultPrevented
