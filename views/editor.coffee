@@ -42,6 +42,7 @@ module.exports = (client) ->
     js: "application/javascript"
     json: "application/json"
     md: "text/markdown"
+    css: "text/css"
 
   mimeTypeFor = (extension) ->
     type = mimes[extension] or "text/plain"
